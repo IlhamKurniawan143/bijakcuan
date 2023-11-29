@@ -1,19 +1,20 @@
 import "./css/checkout.css"
-import { useState } from "react"
-import { useSearchParams } from "react-router-dom"
-import { Navigate } from "react-router-dom"
+import { useState, useEffect } from "react"
+import { useSearchParams, useNavigate } from "react-router-dom"
+import Helmet from "react-helmet"
 import axios from "axios"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons"
 import FormatCurrency from "../components/format-currency"
 import GenerateOrderId from "../components/checkout/generate-order-id"
-import priceData from "../data/program-price.json"
+import programData from "../data/program-price.json"
 import discountData from "../data/checkout-discount.json"
 
-async function getToken(total) {
+async function getToken(total, paket) {
 	const PAYMENT_GATEWAY_API_SERVER = "https://bijak-cuan-api.vercel.app/api"
 	const data = {
-		order_id: GenerateOrderId(),
+		order_id: GenerateOrderId(paket),
+		paket: paket,
 		total: total,
 	}
 
@@ -24,43 +25,55 @@ async function getToken(total) {
 	}
 
 	const response = await axios.post(PAYMENT_GATEWAY_API_SERVER, data, config)
-	console.log(response.data.token)
 
 	return response.data.token
 }
 
 export default function Checkout() {
 	const [searchParams] = useSearchParams()
-	const paket = searchParams.get("paket")
-
-	if (paket !== "Trial" && paket !== "Bulanan" && paket !== "Lifetime") {
-		return <Navigate to="/program" />
-	}
-
-	let random = 23
+	const [selectedProgram, setSelectedProgram] = useState(programData[1])
 	const [discount, setDiscount] = useState(0)
-	const [totalPrice] = useState(priceData[paket] - random)
+	const [totalPrice, setTotalPrice] = useState(0)
+	const [random, setRandom] = useState(0)
+	const paket = searchParams.get("paket")
+	const navigate = useNavigate()
 
-	if (paket === "Trial") {
-		random = 0
-	}
+	useEffect(() => {
+		if (paket !== "Trial" && paket !== "Bulanan" && paket !== "Lifetime") {
+			navigate("/program")
+		}
+
+		if (paket !== "Trial") {
+			setRandom(Math.floor(Math.random() * 100) + 1)
+		}
+
+		const program = programData.find((program) => program.name === paket)
+		setSelectedProgram(program)
+	}, [])
+
+	useEffect(() => {
+		setTotalPrice(selectedProgram.price - random)
+	}, [selectedProgram, random])
 
 	const handleDiscount = (code) => {
 		const foundDiscount = discountData.find((item) => item.code === code)
 		if (foundDiscount) {
-			setDiscount(foundDiscount.discount * priceData[paket])
+			setDiscount(foundDiscount.discount * selectedProgram.price)
 		} else {
 			setDiscount(0)
 		}
 	}
 
-	const handleCheckout = async (total) => {
-		let token = await getToken(total)
+	const handleCheckout = async (total, paket) => {
+		let token = await getToken(total, paket)
 		window.location.href = `https://app.sandbox.midtrans.com/snap/v3/redirection/${token}`
 	}
 
 	return (
 		<main id="checkout">
+			<Helmet>
+				<title>Checkout | Bijakcuan.</title>
+			</Helmet>
 			<div className="container pt-4 pb-5">
 				<div className="row mb-4">
 					<div className="col-lg-6">
@@ -98,11 +111,11 @@ export default function Checkout() {
 						<div className="card">
 							<div className="card-body d-flex flex-column gap-5">
 								<div>
-									<h6>Metode Pembayaran</h6>
+									<h5>Metode Pembayaran</h5>
 									<div className="btn btn-primary">Otomatis</div>
 								</div>
 								<div className="d-flex flex-column gap-2">
-									<h6>Kode Promo</h6>
+									<h5>Kode Promo</h5>
 									<input
 										onChange={(e) => handleDiscount(e.target.value)}
 										className="form-control"
@@ -113,11 +126,11 @@ export default function Checkout() {
 									/>
 								</div>
 								<div className="d-flex flex-column gap-2">
-									<h6>Detail Pembayaran</h6>
+									<h5>Detail Pembayaran</h5>
 									<div className="d-flex flex-column gap-4">
 										<div className="d-flex justify-content-between">
 											<p>Harga Kursus</p>
-											<p>{FormatCurrency(priceData[paket])}</p>
+											<p>{FormatCurrency(selectedProgram.price)}</p>
 										</div>
 										<div className="d-flex justify-content-between">
 											<p>Kode Unik</p>
@@ -137,7 +150,8 @@ export default function Checkout() {
 								</div>
 							</div>
 							<div className="card-footer">
-								<div onClick={() => handleCheckout(totalPrice - discount)}>
+								<div
+									onClick={() => handleCheckout(totalPrice - discount, paket)}>
 									<div className="btn btn-primary w-100">
 										Bayar & Gabung Kelas Sekarang
 									</div>

@@ -6,6 +6,7 @@ import { Cookies } from "react-cookie"
 import { SITE_URL } from "../utils/env"
 import { useNavigate } from "react-router-dom/dist"
 import { useState, useEffect } from "react"
+import Helmet from "react-helmet"
 import axios from "axios"
 
 export default function Daftar() {
@@ -58,7 +59,10 @@ export default function Daftar() {
 
 	return (
 		<main id="daftar">
-			<div className="container py-5 h-100">
+			<Helmet>
+				<title>Daftar | Bijakcuan.</title>
+			</Helmet>
+			<div className="container-lg py-5 h-100">
 				<div className="row d-flex justify-content-center align-items-center h-100">
 					<div className="col-12 col-md-8 col-lg-6 col-xl-6 ">
 						<div
