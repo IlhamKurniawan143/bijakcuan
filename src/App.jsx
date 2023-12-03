@@ -7,6 +7,8 @@ import Masuk from "./pages/Masuk"
 import Daftar from "./pages/Daftar"
 import Program from "./pages/Program"
 import Checkout from "./pages/Checkout"
+import PembayaranSukses from "./pages/PembayaranSukses"
+import PembayaranGagal from "./pages/PembayaranGagal"
 import Event from "./pages/Event"
 import DetailEvent from "./pages/DetailEvent"
 import Promo from "./pages/Promo"
@@ -30,6 +32,8 @@ export default function App() {
 				<Route path="/program" element={<Program />} />
 				<Route path="/event" element={<Event />} />
 				<Route path="/checkout" element={<Checkout />} />
+				<Route path="/pembayaransukses" element={<PembayaranSukses />} />
+				<Route path="/pembayarangagal" element={<PembayaranGagal />} />
 				<Route path="/event/detail" element={<DetailEvent />} />
 				<Route path="/promo" element={<Promo />} />
 				<Route path="/artikel" element={<Artikel />} />

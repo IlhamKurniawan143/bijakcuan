@@ -10,7 +10,7 @@ export default function Artikel() {
 				<title>Artikel | Bijakcuan.</title>
 			</Helmet>
 
-			<div className="hero">
+			<div  className="hero">
 				<div className="container">
 					<div className="row justify-content-between flex-column-reverse flex-lg-row gap-5 gap-lg-0">
 						<div className="col-lg-6">

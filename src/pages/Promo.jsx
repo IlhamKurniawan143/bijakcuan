@@ -58,7 +58,7 @@ export default function Promo() {
               <h1 className="text-white px-5 mb-5">
                 Buka Kesuksesan Finansial Anda Sekarang Bersama Bijakcuan
               </h1>
-              <Link to={"/program"} className="btn btn-primary mb-10">
+              <Link to={"/program"}  className="btn btn-primary mb-10">
                 Gabung Sekarang
               </Link>
             </div>

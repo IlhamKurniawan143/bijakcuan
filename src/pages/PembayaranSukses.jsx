@@ -15,13 +15,22 @@ export default function PembayaranSukses() {
 				style={{
 					color: "Green",
 					borderRadius: "2rem",
+<<<<<<< HEAD
 					height: "150px",
 					width: "150px",
+=======
+					height: "100px",
+					width: "100px",
+>>>>>>> 0ec10432cf1c945300f4eebce8601e8e79c44aa5
 				}}></FontAwesomeIcon>
 				
 			<h1 className="mb-4">Pembayaran Sukses</h1>
 			<p className="mb-5 w-75 mx-auto">
+<<<<<<< HEAD
 				Silahkan mempelajari materi kelas yang telah <br />kami design dengan baik
+=======
+				Silahkan mempelajari materi kelas yang telah <br/>kami design dengan baik
+>>>>>>> 0ec10432cf1c945300f4eebce8601e8e79c44aa5
 				untuk mencapai goals Anda
 			</p>
 			<Link href={"/profil"} className="btn btn-primary">
